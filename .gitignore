@@ -1,2 +1,4 @@
 *.so
 build
+.idea
+.py[cod]
