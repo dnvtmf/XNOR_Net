@@ -50,7 +50,7 @@ solver = Solver(model, data,
                 optim_config={
                     'learning_rate': 3e-4
                 },
-                print_every=100,
+                print_every=10,
                 verbose=True)
 solver.train()
 
@@ -60,9 +60,9 @@ plt.plot(solver.loss_history, 'o')
 plt.subplot(2, 1, 2)
 plt.plot(solver.train_acc_history, '-o')
 plt.plot(solver.val_acc_history, '-o')
-plt.show()
 
 y_test_pred = np.argmax(model.loss(X_test), axis=1)
 y_val_pred = np.argmax(model.loss(X_val), axis=1)
 print 'Validation set accuracy: ', (y_val_pred == y_val).mean()
 print 'Test set accuracy: ', (y_test_pred == y_test).mean()
+plt.show()

@@ -86,7 +86,7 @@ class CNN(object):
                 S = layer['pool_param'].setdefault('stride', 2)
                 dims = (dims[0], (dims[1] - PH) / S + 1, (dims[2] - PW) / S + 1)
             elif layer['name'] == 'flat':
-                dims = (np.prod(dims[1:]),)
+                dims = (np.prod(dims),)
                 print '-->flat'
             else:
                 assert 0, 'Unknown layer'
@@ -108,9 +108,9 @@ class CNN(object):
             self.binary = True
             for l in xrange(self.num_layers):
                 if self.arch[l]['name'] == 'conv':
-                    bin_params['W%d' % l] = conv_params_binary(params['W%d' % l])
+                    bin_params['W%d' % l] = binarize_forward_2d(params['W%d' % l])
                 elif self.arch[l]['name'] == 'fc':
-                    bin_params['W%d' % l] = fc_params_binary(params['W%d' % l])
+                    bin_params['W%d' % l] = binarize_forward_2d(params['W%d' % l])
         for l in xrange(self.num_layers):
             layer = self.arch[l]
             if layer['name'] == 'conv':
@@ -141,8 +141,7 @@ class CNN(object):
         for l in xrange(self.num_layers - 1, -1, -1):
             layer = self.arch[l]
             if layer['name'] == 'conv':
-                dout, grads['W%d' % l], grads['b%d' % l] = bin_conv_backward(
-                    dout, cache['conv%d' % l])
+                dout, grads['W%d' % l] = bin_conv_backward(dout, cache['conv%d' % l])
             elif layer['name'] == 'fc':
                 dout, grads['W%d' % l] = bin_fc_backward(dout, cache['fc%d' % l])
             elif layer['name'] == 'pool':
