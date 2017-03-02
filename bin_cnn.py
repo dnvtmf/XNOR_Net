@@ -4,7 +4,7 @@ from layer_utils import *
 
 class CNN(object):
     """
-    A three-layer convolutional network with the following architecture:
+    A three-layer convolution network with the following architecture:
 
     any architecture with layers in {conv, relu , pool, affine, softmax/svm}
 

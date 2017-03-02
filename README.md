@@ -1,6 +1,12 @@
 # XNOR_Net
 This is a convolution neural network of binarized activations and weights.
 
+# Details
+
+`$I, W$` is the real-value input and weights.
+
+We let `$I_b \approx \alpha \sign{I}$`, where `$\alpha = \frac{1}{n}{||I||_{\el_1}}$`
+
 write by dnvtmf
 
 # References
