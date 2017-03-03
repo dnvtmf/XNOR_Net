@@ -7,7 +7,7 @@ from solver import Solver
 data = get_mnist_data()
 # data = get_CIFAR10_data()
 # for idx in xrange(25):
-#     plt.subplot(5, 5, idx + 1)
+# plt.subplot(5, 5, idx + 1)
 #     plt.imshow(data['X_train'][idx, 0], cmap='gray')
 # plt.show()
 
