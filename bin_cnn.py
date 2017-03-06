@@ -96,7 +96,7 @@ class CNN(object):
 
     def loss(self, images, y=None):
         """
-        Evaluate loss and gradient for the three-layer convolutional network.
+        Evaluate loss and gradient for the three-layer convolution network.
         """
         out = images
         cache = {}
@@ -108,7 +108,7 @@ class CNN(object):
             self.binary = True
             for l in xrange(self.num_layers):
                 if self.arch[l]['name'] == 'conv':
-                    bin_params['W%d' % l] = binarize_forward_2d(params['W%d' % l])
+                    bin_params['W%d' % l] = binarize_forward_filters(params['W%d' % l])
                 elif self.arch[l]['name'] == 'fc':
                     bin_params['W%d' % l] = binarize_forward_2d(params['W%d' % l])
         for l in xrange(self.num_layers):

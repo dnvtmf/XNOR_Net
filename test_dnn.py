@@ -42,15 +42,17 @@ def flat():
 
 
 input_dim = X_train.shape[1:]
-arch = [conv(32, (5, 5)), norm(), flat(), fc(100), norm(), fc(100), norm(), fc(10)]
-model = CNN(arch, input_dim=input_dim, weight_scale=3e-2, reg=1e-2)
+# arch = [conv(64, (5, 5)), norm(), conv(64, (5, 5)), flat(), fc(384), norm(), fc(192), norm(), fc(10)]
+arch = [flat(), fc(384), norm(), fc(192), norm(), fc(10)]
+model = CNN(arch, input_dim=input_dim, weight_scale=0.04, reg=0.004)
 solver = Solver(model, data,
-                num_epochs=10, batch_size=200,
+                num_epochs=20, batch_size=256,
                 update_rule='adam',
                 optim_config={
-                    'learning_rate': 3e-4
+                    'learning_rate': 1e-4
                 },
-                print_every=10,
+                lr_decay=0.99,
+                print_every=100,
                 verbose=True)
 solver.train()
 

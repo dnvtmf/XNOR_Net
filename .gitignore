@@ -2,4 +2,6 @@
 build
 .idea
 *.pyc
+.ipynb_checkpoints
+XNOR_tf_ops
 
