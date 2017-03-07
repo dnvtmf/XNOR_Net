@@ -270,3 +270,4 @@ class Solver(object):
 
         # print time cost
         print 'average time cost: %f' % (np.mean(time_history))
+        print 'total time cost: %f' % (np.sum(time_history))

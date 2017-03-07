@@ -43,18 +43,21 @@ def flat():
 
 input_dim = X_train.shape[1:]
 # arch = [conv(64, (5, 5)), norm(), conv(64, (5, 5)), flat(), fc(384), norm(), fc(192), norm(), fc(10)]
-arch = [flat(), fc(384), norm(), fc(192), norm(), fc(10)]
+arch = [conv(64, (5, 5)), norm(), pool(), flat(), fc(384), norm(), fc(192), norm(), fc(10)]
 model = CNN(arch, input_dim=input_dim, weight_scale=0.04, reg=0.004)
 solver = Solver(model, data,
-                num_epochs=20, batch_size=256,
+                num_epochs=10, batch_size=128,
                 update_rule='adam',
                 optim_config={
                     'learning_rate': 1e-4
                 },
                 lr_decay=0.99,
-                print_every=100,
+                print_every=10,
                 verbose=True)
 solver.train()
+
+print 'Validation set accuracy: ', solver.check_accuracy(X_val, y_val)
+print 'Test set accuracy: ', solver.check_accuracy(X_test, y_test)
 
 plt.subplot(2, 1, 1)
 plt.plot(solver.loss_history, 'o')
@@ -63,8 +66,4 @@ plt.subplot(2, 1, 2)
 plt.plot(solver.train_acc_history, '-o')
 plt.plot(solver.val_acc_history, '-o')
 
-y_test_pred = np.argmax(model.loss(X_test), axis=1)
-y_val_pred = np.argmax(model.loss(X_val), axis=1)
-print 'Validation set accuracy: ', (y_val_pred == y_val).mean()
-print 'Test set accuracy: ', (y_test_pred == y_test).mean()
 plt.show()

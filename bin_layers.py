@@ -1,5 +1,6 @@
 from fast_layers import *
 import numpy as np
+from scipy.signal import convolve
 
 
 def binarize_forward_2d(x):
@@ -48,28 +49,30 @@ def sign_backward(dout, cache):
 
 def binarize_forward_filters(x):
     out, cache = sign_forward(x)
-    alpha = np.mean(np.abs(x), axis=(1, 2, 3), keepdims=True)
+    alpha = np.mean(np.abs(x), axis=(1, 2, 3)).reshape((1, -1, 1, 1))
     return out, x, alpha, cache
 
 
 def binarize_backward_filters(dout, da, cache):
     bx, x, alpha, sc = cache
-    dx = sign_backward(dout, sc) + da * (1. / np.prod(x.shape[1:]))
+    dalpha = np.sum(da, axis=(0, 2, 3)) * (1. / np.prod(x.shape[1:]))
+    dx = sign_backward(dout, sc) + dalpha.reshape(-1, 1, 1, 1) * bx
     return dx
 
 
 def binarize_forward_4d(x, w, h):
     out, cache = sign_forward(x)
-    a = np.mean(np.abs(x), axis=(2, 3), keepdims=True)
+    a = np.mean(np.abs(x), axis=(0, 1), keepdims=True)
     v = np.ones((1, 1, w, h)) * (1. / (w * h))
-    k = np.convolve(a, v, mode='full')
+    k = convolve(a, v, mode='same')
     return out, x, k, cache, v
 
 
 def binarize_backward_4d(dout, dk, cache):
     bx, x, k, sc, v = cache
     dx = sign_backward(dout, sc)
-    dx += np.convolve(dk, v, mode='full')
+    dk = np.sum(dk, axis=(0, 1), keepdims=True)
+    dx += np.rot90(convolve(np.rot90(dk, 2), v, mode='same'), 2) * bx
     return dx
 
 
